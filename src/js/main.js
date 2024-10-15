@@ -1,5 +1,6 @@
 import Spotify from "./sportfy.mjs";
 import utils from "./utils.mjs";
+import Deezer from "./deezer.mjs";
 
 
 const init = async () => {
@@ -7,12 +8,16 @@ const init = async () => {
     const utilits = new utils('accessTokenSpotify')
     
     const token = utilits.getStorage()
-    const access_token = token ? token.access_token : await sportfy.getAccessToken()
-    const sportfy = new Spotify(access_token, url);
+    const sportfy = new Spotify();
+    await sportfy.getAccessToken()
+    await sportfy.GetPlayLists()
+
+    const deezer = new Deezer();
+    await deezer.GetPlaylists()
     
     
-    sportfy.getTracks('37i9dQZEVXbLRQDuF5jeBp')
-    sportfy.getTrack('5G2f63n7IPVPPjfNIGih7Q')
+    //sportfy.getTracks('37i9dQZEVXbLRQDuF5jeBp')
+    //sportfy.getTrack('5G2f63n7IPVPPjfNIGih7Q')
 }
 
 init()

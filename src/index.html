@@ -3,12 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/styles.large.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.large.css">
     <title>Final Project - Anderson Ramos</title>
     <script type="module" src="js/main.js"></script>
 </head>
 <body>
-    <h1>Hello</h1>
+   <div id="container">
+    <section id="menu">
+        <nav class="menu">
+            <ul>
+                <li>Home</li>
+                <li>The 50</li>
+                <li>Compare Playlist</li>
+            </ul>
+        </nav>
+    </section>
+    <section id="main">
+        <header>
+            <div class="form-control">
+                <label for="coutry">Select a country</label>
+                <select name="country" id="country">
+                    <option selected value="">Select</option>
+                    <option value="1">Brazil</option>
+                    <option value="2">United State</option>
+                </select>
+            </div>
+        </header>
+        <section id="content">
+            <div class="content-title">
+                <img src="/Image/spotify.png" alt="">
+                <h2>Playlist Spotify </h2>
+            </div>
+            <div id="spotify" class="playlist-card">
+                <!-- Dynamic content -->
+            </div>
+            <div class="content-title deezer">
+                <img src="/Image/deezer.png" alt="">
+                <h2>Playlist Deezer </h2>
+            </div>
+            <div id="deezer" class="playlist-card">
+                <!-- Dynamic content -->
+            </div>
+        </section>
+    </section>
+   </div>
 </body>
 </html>

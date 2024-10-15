@@ -1,9 +1,10 @@
 import utils from "./utils.mjs";
 
+const utilits = new utils('accessTokenSpotify')
 export default class Spotify {
-  constructor(accessToken, url) {
-    this.accessToken = accessToken;
-    this.url = url;
+  constructor(accessToken) {
+    this.accessToken = accessToken
+    this.playlists = []
   }
 
   async getAccessToken() {
@@ -27,9 +28,9 @@ export default class Spotify {
     );
     const data = await response.json();
 
-    const utilits = new utils('accessTokenSpotify')
     utilits.setStorage(JSON.stringify(data))
 
+    this.accessToken = data.access_token
     return data.access_token
   }
 
@@ -41,7 +42,7 @@ export default class Spotify {
     });
 
     const data = await response.json()
-    console.log(data)
+    return data
   }
 
   async getTrack(track_id) {
@@ -54,6 +55,13 @@ export default class Spotify {
     const data = await response.json()
     console.log("Track:")
     console.log(data)
+  }
+
+  async GetPlayLists() {
+    const response = await fetch("/data/playlist-spotify.json");
+    const data = await response.json()
+    this.playlists = data;
+    utilits.HandlePayListHTML(data, "spotify")
   }
 
 }

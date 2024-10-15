@@ -1,5 +1,215 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+:root {
+  --primary: #1f2b37;
+  --second: #4f76f6;
+  --background: #f9f9f9;
+  --four: #77f2a1;
+  --five: #11a9f9;
+}
+
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+body {
+  width: 100%;
+  height: 100vh;
+}
+
+#container {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 1fr;
+  grid-template-rows: 50px 1fr;
+}
+/* Menu */
+#menu {
+  height: 100%;
+  padding: 0px 24px;
+  background-color: var(--primary);
+  color: var(--four);
+}
+#menu .menu ul {
+  display: inline-flex;
+  height: 50px;
+  gap: 16px;
+  align-items: center;
+  list-style: none;
+}
+
+/* Main */
+#main {
+  width: 100%;
+  margin: 16px auto;
+  padding: 8px;
+  background-color: var(--background);
+}
+
+#content {
+  display: grid;
+}
+#content .content-title {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  gap: 16px;
+  margin: 24px;
+}
+#content .content-title h2 {
+  color: var(--primary);
+}
+#content .content-title img {
+  width: 32px;
+}
+#content .content-title.deezer {
+  margin-top: 80px;
+}
+#content .playlist-card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+  justify-items: center;
+}
+
+#content .playlist-card .card {
+  display: grid;
+  grid-template-rows: 200px auto auto;
+  justify-content: center;
+  width: 200px;
+  height: 250px;
+}
+
+#content .playlist-card .card img {
+  width: 100%;
+}
+#content .playlist-card .card h4 {
+  padding: 8px 0px;
+}
+#content .playlist-card .card a {
+  text-decoration: none;
+  text-align: center;
+  padding: 10px 20px;
+  background-color: var(--four);
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Playlist */
+.data-playlist {
+  display: grid;
+  grid-template-rows: 70vh 20vh;
+}
+#section-playlist {
+  overflow: auto;
+}
+#playlist-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 100px 120px;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--second);
+}
+#playlist-header p {
+  min-width: 120px;
+}
+
+#playlist-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 100px 120px;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+  font-size: 13px;
+}
+#playlist-data:nth-child(odd) {
+  background-color: #fff;
+}
+#playlist-data .play {
+  display: grid;
+  grid-template-columns: 80px auto;
+  align-items: center;
+  min-width: 200px;
+}
+#playlist-data a {
+  width: 90%;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  padding: 5px 8px;
+  background-color: var(--second);
+  color: var(--background);
+}
+#playlist-data .song-title {
+  cursor: pointer;
+  color: var(--five);
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: var(--background);
+}
+audio::-webkit-media-controls-play-button {
+  background-color: var(--four);
+  border-radius: 50%;
+  margin-right: 10px;
+  padding: 20px;
+}
+
+audio::-webkit-media-controls-play-button:hover {
+  background-color: var(--four);
+}
+
+/* playmusic */
+
+#playmusic {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: 20px;
+}
+
+#playmusic img {
+  width: 100%;
+}
+#playmusic p {
+  font-size: 13px;
+  color: var(--primary);
+  padding-left: 20px;
+}
+
+#playmusic audio {
+  margin-top: 20px;
+  width: 800px;
+}
+#playmusic div {
+  display: grid;
+  justify-items: center;
+}
+
+#playmusic .control {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+#playmusic .control button {
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  padding: 5px 8px;
+  background-color: var(--second);
+  color: var(--background);
+
+  padding: 10px 30px;
+  border: 0;
+  cursor: pointer;
+}
+#playmusic .control button:disabled {
+    background-color: #f9f9f9;
+    color: #eee;
+    cursor: not-allowed;
 }
