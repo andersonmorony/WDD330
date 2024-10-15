@@ -3,26 +3,8 @@ import utils from "./utils.mjs";
 const utilits = new utils("accessTokenSpotify");
 
 export default class Song {
-
-    constructor(currentSongIndex) {
-        this.currentSongIndex = currentSongIndex
-    }
-
-  async getSongSpotifyById(URI) {
-    try {
-      const token = utilits.getStorage();
-      const response = await fetch(URI, {
-        headers: {
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      });
-      const data = await response.json();
-      console.log(data);
-      this.handleSong(data);
-      return data;
-    } catch (error) {
-      console.error("Song doesnt found");
-    }
+  constructor(currentSongIndex) {
+    this.currentSongIndex = currentSongIndex;
   }
 
   handleSong(song) {
@@ -30,7 +12,7 @@ export default class Song {
             <img src="${song.album.images[1].url}" alt="">
             <div>
                 <p>${song.name}</p>
-                <p>${song.album.name}</p>
+                <p class="song-album">${song.album.name}</p>
                 <audio controls autoplay>
                     <source src="${song.preview_url}" type="audio/mpeg">
                     Seu navegador não suporta a tag de áudio.

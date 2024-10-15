@@ -101,7 +101,7 @@ body {
 /* Playlist */
 .data-playlist {
   display: grid;
-  grid-template-rows: 70vh 20vh;
+  grid-template-rows: 10vh 60vh 20vh;
 }
 #section-playlist {
   overflow: auto;
@@ -212,4 +212,8 @@ audio::-webkit-media-controls-play-button:hover {
     background-color: #f9f9f9;
     color: #eee;
     cursor: not-allowed;
+}
+
+#playmusic .song-album {
+    color: #3e3e3ea4;
 }

@@ -18,6 +18,7 @@ const GetFirstSong = async (track) => {
 const HandlePayListHTML = async () => {
   let HTML = "";
   const songs = await sportfy.getTracks(playlist_id);
+  console.log(songs)
   songsList = songs;
   const first_song = songs.items[0].track;
 

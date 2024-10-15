@@ -14,10 +14,7 @@ const init = async () => {
 
     const deezer = new Deezer();
     await deezer.GetPlaylists()
-    
-    
-    //sportfy.getTracks('37i9dQZEVXbLRQDuF5jeBp')
-    //sportfy.getTrack('5G2f63n7IPVPPjfNIGih7Q')
+
 }
 
 init()
