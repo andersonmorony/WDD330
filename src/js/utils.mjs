@@ -42,4 +42,10 @@ export default class utils {
 
     return formattedTime;
   }
+
+  formateDate(date) {
+    const newDate = new Date(date)
+    const dateFormated = newDate.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    return dateFormated
+  }
 }

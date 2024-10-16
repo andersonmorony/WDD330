@@ -5,6 +5,7 @@ const utilits = new utils("accessTokenSpotify");
 export default class Song {
   constructor(currentSongIndex) {
     this.currentSongIndex = currentSongIndex;
+    this.songs = [];
   }
 
   handleSong(song) {
@@ -31,10 +32,33 @@ export default class Song {
     if (song.id == firstSong.id) {
       document.getElementById("preview").disabled = true;
     }
+    this.NextSong();
+    this.previusSong();
   }
 
   updateSongIndex(index) {
     this.currentSongIndex = index;
     return this.currentSongIndex;
+  }
+
+  updateSongs(songs) {
+    this.songs = songs;
+  }
+
+  NextSong() {
+    const btnNext = document.querySelector("#next");
+    btnNext.addEventListener("click", () => {
+      const index = this.updateSongIndex(this.currentSongIndex + 1);
+      const songData = this.songs.items[index].track;
+      this.handleSong(songData);
+    });
+  }
+  previusSong() {
+    const btnNext = document.querySelector("#preview");
+    btnNext.addEventListener("click", () => {
+      const index = this.updateSongIndex(this.currentSongIndex - 1);
+      const songData = this.songs.items[index].track;
+      this.handleSong(songData);
+    });
   }
 }

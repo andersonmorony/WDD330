@@ -11,14 +11,11 @@ let songsList = [];
 
 const GetFirstSong = async (track) => {
   songlass.handleSong(track);
-  NextSong();
-  previusSong();
 };
 
 const HandlePayListHTML = async () => {
   let HTML = "";
   const songs = await sportfy.getTracks(playlist_id);
-  console.log(songs)
   songsList = songs;
   const first_song = songs.items[0].track;
 
@@ -56,22 +53,40 @@ const HandlePayListHTML = async () => {
   });
 };
 
-function NextSong() {
-  const btnNext = document.querySelector("#next");
-  btnNext.addEventListener("click", () => {
-    const index = songlass.updateSongIndex(songlass.currentSongIndex + 1);
-    const songData = songsList.items[index].track;
-    GetFirstSong(songData);
-  });
+
+function lastUpdated() {
+  const { items } = songsList;
+  const lastUpdated = utilits.formateDate(items[0].added_at);
+  const lastUpdatedElement = document.querySelector("#last-updated");
+
+  lastUpdatedElement.innerHTML = lastUpdated;
 }
 
-function previusSong() {
-    const btnNext = document.querySelector("#preview");
-    btnNext.addEventListener("click", () => {
-      const index = songlass.updateSongIndex(songlass.currentSongIndex - 1);
-      const songData = songsList.items[index].track;
-      GetFirstSong(songData);
-    });
-  }
+async function getInfoCurrentPlayList() {
+  const { description, images, name, external_urls, followers } =
+    await sportfy.GetPlayListInfomation(playlist_id);
 
-HandlePayListHTML();
+  // change elements
+  const playlistNameElement = document.querySelector(".playlist-name");
+  playlistNameElement.innerHTML = name;
+
+  const playlistDescrptElement = document.querySelector(
+    ".playlist-description"
+  );
+  playlistDescrptElement.innerHTML = description;
+
+  const playlistFollowElement = document.querySelector(".playlist-follows");
+  playlistFollowElement.innerHTML = `${followers.total.toLocaleString()} follows`;
+
+  const playlistImageElement = document.querySelector(".playlist-image");
+  playlistImageElement.setAttribute("src", images[0].url);
+}
+
+async function init() {
+  await HandlePayListHTML();
+  await getInfoCurrentPlayList();
+  await songlass.updateSongs(songsList)
+  lastUpdated();
+}
+
+init();
