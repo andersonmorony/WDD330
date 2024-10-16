@@ -19,7 +19,7 @@ export default class utils {
                 <div class="card">
                     <img src="${playlist.Image}" alt="">
                     <h4>${playlist.Title}</h4>
-                    <a href="/playlist/index.html?id=${playlist.Id}">See musics</a>
+                    <a href="/playlist/index.html?id=${playlist.Id}&type=${playlist.Type}">See musics</a>
                 </div>
             `;
     });
@@ -33,8 +33,8 @@ export default class utils {
     return paramValue;
   }
 
-  convertMillisecondsToTime(ms) {
-    const totalSeconds = Math.floor(ms / 1000);
+  convertMillisecondsToTime(ms, isMiliSeconds = true) {
+    const totalSeconds = isMiliSeconds ? Math.floor(ms / 1000) : ms;
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
 

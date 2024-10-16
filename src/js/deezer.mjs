@@ -13,5 +13,15 @@ export default class Deezer {
         this.playlists = data;
         utilits.HandlePayListHTML(data, "deezer")
     }
+
+    async GetPlayList(playlist_id) {
+        try {
+            const response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.deezer.com/playlist/${playlist_id}`)
+            const data = await response.json()
+            return data
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 

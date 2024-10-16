@@ -126,7 +126,7 @@ body {
   margin-bottom: 8px;
   align-items: center;
   font-size: 12px;
-  color: var(--second);
+  color: var(--six);
 }
 #playlist-header p {
   min-width: 120px;
@@ -145,7 +145,7 @@ body {
 }
 #playlist-data .play {
   display: grid;
-  grid-template-columns: 80px auto;
+  grid-template-columns: 80px auto 40px;
   align-items: center;
   min-width: 200px;
 }
@@ -183,6 +183,7 @@ audio::-webkit-media-controls-play-button:hover {
   grid-template-columns: 140px 1fr;
   align-items: center;
   gap: 20px;
+  box-shadow: rgba(0, 0, 0, 0.45) 0px -10px 20px -5px;
 }
 
 #playmusic img {
@@ -195,7 +196,6 @@ audio::-webkit-media-controls-play-button:hover {
 }
 
 #playmusic audio {
-  margin-top: 20px;
   width: 800px;
 }
 #playmusic div {

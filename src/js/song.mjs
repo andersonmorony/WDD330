@@ -6,21 +6,23 @@ export default class Song {
   constructor(currentSongIndex) {
     this.currentSongIndex = currentSongIndex;
     this.songs = [];
+    this.currentSong = {}
+    this.interval;
   }
 
-  handleSong(song) {
+  handleSong(id, image, name, album, preview) {
     const HTML = `
-            <img src="${song.album.images[1].url}" alt="">
+            <img src="${image}" alt="">
             <div>
-                <p>${song.name}</p>
-                <p class="song-album">${song.album.name}</p>
-                <audio controls autoplay>
-                    <source src="${song.preview_url}" type="audio/mpeg">
+                <p>${name}</p>
+                <p class="song-album">${album}</p>
+                <audio id="audioSong" controls autoplay>
+                    <source src="${preview}" type="audio/mpeg">
                     Seu navegador não suporta a tag de áudio.
                 </audio>
                 <div class="control">
-                    <button id="preview" type="button">Anterior</button>
-                    <button id="next" type="button">Proxima</button>
+                    <button id="preview" type="button">Previous</button>
+                    <button id="next" type="button">Next</button>
                 </div>
             </div>
         `;
@@ -29,11 +31,12 @@ export default class Song {
 
     const firstSong = utilits.getStorage("first_song");
 
-    if (song.id == firstSong.id) {
+    if (id == firstSong.id) {
       document.getElementById("preview").disabled = true;
     }
     this.NextSong();
     this.previusSong();
+    this.addMusicGif(id)
   }
 
   updateSongIndex(index) {
@@ -49,16 +52,39 @@ export default class Song {
     const btnNext = document.querySelector("#next");
     btnNext.addEventListener("click", () => {
       const index = this.updateSongIndex(this.currentSongIndex + 1);
-      const songData = this.songs.items[index].track;
-      this.handleSong(songData);
+      const song = this.songs.items[index].track;
+      this.currentSong = song
+      this.handleSong(song.id, song.album.images[1].url, song.name, song.album.name, song.preview_url);
+      this.RemovePreviusMusicGif(this.songs.items[index - 1].track.id)
     });
   }
   previusSong() {
     const btnNext = document.querySelector("#preview");
     btnNext.addEventListener("click", () => {
       const index = this.updateSongIndex(this.currentSongIndex - 1);
-      const songData = this.songs.items[index].track;
-      this.handleSong(songData);
+      const song = this.songs.items[index].track;
+      this.currentSong = song
+      this.handleSong(song.id, song.album.images[1].url, song.name, song.album.name, song.preview_url);
+      this.RemovePreviusMusicGif(this.songs.items[index + 1].track.id)
     });
   }
+
+  addMusicGif(id) {
+    clearInterval(this.interval)
+    this.interval = setInterval(() => {
+      const audioElement = document.getElementById('audioSong');
+      if (audioElement.duration > 0 && !audioElement.paused) {
+          const element = document.getElementById(id);
+          element.innerHTML = `<img src="/image/wave.gif" alt="playing">`;
+      } else {
+        this.RemovePreviusMusicGif(id);
+      }
+    }, 500)
+  }
+
+  RemovePreviusMusicGif(id) {
+    const element = document.getElementById(id);
+    element.innerHTML = ""
+  }
 }
+
