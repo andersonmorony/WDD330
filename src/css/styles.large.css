@@ -1,3 +1,39 @@
 @media (min-width: 600px) {
-    /* Seu código CSS aqui */
+  /* Seu código CSS aqui */
+  .mobile-hidden {
+    display: block;
   }
+
+  /* Playlist */
+  #playlist-data {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 100px 120px;
+  }
+  #playmusic {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 20px;
+  }
+  #playmusic audio {
+    width: 800px;
+  }
+  .header-playlist p {
+    color: var(--six);
+    font-size: 13px;
+  }
+  #playlist-data {
+    font-size: 13px;
+  }
+  #playlist-data .play {
+    display: grid;
+    grid-template-columns: 64px auto 40px;
+    gap: 8px;
+  }
+  #playlist-data .play img {
+    width: auto;
+  }
+  .data-playlist {
+    display: grid;
+    grid-template-rows: 13vh 55vh 20vh;
+  }
+}
