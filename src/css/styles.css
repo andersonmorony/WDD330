@@ -387,3 +387,6 @@ audio::-webkit-media-controls-play-button:hover {
 #compare .btn-add::after {
   content: " ❤️";
 }
+.loading {
+  display: none;
+}

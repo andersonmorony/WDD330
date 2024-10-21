@@ -56,6 +56,7 @@ export default class Spotify {
       }
     );
     const data = await response.json();
+    return data
   }
   async getAlbum(album_id) {
     const endpoint = `https://api.spotify.com/v1/albums/${album_id}`

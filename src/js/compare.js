@@ -56,7 +56,6 @@ async function selectPplaylist(playlist_id) {
 }
 
 async function compare() {
-  debugger;
   //cards
   const cards = document.querySelector(`#spotify`);
   cards.classList.add("hidden");
@@ -73,8 +72,34 @@ async function compare() {
   const second_playlist = await sportfy.GetPlayListInfomation(
     playlistSelected[1].playlist_id
   );
+
+  document.querySelector(".loading").classList.add("show")
+  document.querySelector(".loading").classList.remove("hidden")
+
   loadFirst_musics(".content-first", first_playlist);
   loadFirst_musics(".content-second", second_playlist);
+
+  document.querySelector(".loading").classList.add("hidden")
+  document.querySelector(".loading").classList.remove("show")
+
+  document.querySelectorAll(".btn-favorite").forEach((element) => {
+    element.addEventListener('click', async () => {
+        const id = element.dataset.id;
+        const song = await sportfy.getTrack(id)
+        console.log(song)
+        const songsStorage = utilits.getStorage('favorite') || []
+        songsStorage.push(song)
+
+        utilits.setStorage('favorite', JSON.stringify(songsStorage))
+        element.disabled = true
+        element.innerHTML = "Added"
+        element.classList.add("btn-favorite-remove");
+        element.classList.remove("btn-favorite");
+        removeFavorite()
+    })
+  })
+
+
 }
 
 function loadFirst_musics(elementParent, songs) {
@@ -92,7 +117,7 @@ function loadFirst_musics(elementParent, songs) {
                   <p class="mobile-hidden">${utilits.convertMillisecondsToTime(
                     track.duration_ms
                   )}</p>
-                  <button class="btn btn-add">Add Favorite</button>
+                  <button data-id="${track.id}" class="btn btn-add btn-favorite">Add Favorite</button>
           </div>
           `;
     document.querySelector(elementParent).innerHTML = HTML;
@@ -120,6 +145,25 @@ function UpdateState() {
     document.querySelector("#btn-clear").classList.add("hidden");
     document.querySelector("#btn-clear").classList.remove("show");
   }
+}
+
+function removeFavorite() {
+
+  document.querySelectorAll(".btn-favorite-remove").forEach((element) => {
+    element.addEventListener('click', async () => {
+        const id = element.dataset.id;
+        const songsStorage = utilits.getStorage('favorite') || []
+        songsStorage.filter((item) => {
+            item.id !== id
+        })
+
+        utilits.setStorage('favorite', JSON.stringify(songsStorage))
+        element.disabled = true
+        element.innerHTML = "Add Favorite"
+        element.classList.add("btn-favorite");
+        element.classList.remove("btn-favorite-remove");
+    })
+  })
 }
 
 init();
