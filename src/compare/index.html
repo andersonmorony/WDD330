@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/styles.large.css">
     <title>Final Project - Anderson Ramos</title>
-    <script type="module" src="js/main.js"></script>
+    <script type="module" src="/js/compare.js"></script>
 </head>
 <body>
    <div id="container">
@@ -20,12 +20,10 @@
         </nav>
     </section>
     <section id="main">
-        <section class="search">
-            <h1>Search any music or album by the name</h1>
-            <div>
-                <input id="search-input" type="text" placeholder="Track name or Album 🔍" />
-                <button id="btn-search" type="button">Search</button>
-            </div>
+        <section id="resume">
+            <p>Select two playlist to compare musics positions, Selected <span id="count-selected">0</span></p>
+            <button id="btn-start-compare" type="button">Compare Now</button>
+            <button id="btn-clear" type="button">Clear</button>
         </section>
         <section id="content">
             <div class="content-title">
@@ -35,12 +33,18 @@
             <div id="spotify" class="playlist-card">
                 <!-- Dynamic content -->
             </div>
-            <!-- <div class="content-title deezer">
-                <img src="/Image/deezer.png" alt="">
-                <h2>Playlist Deezer </h2>
+        </section>
+        <section id="compare">
+            <div class="loading">loading...</div>
+            <div id="first">
+                <h1></h1>
+                <div class="content-first"></div>
             </div>
-            <div id="deezer" class="playlist-card">
-            </div> -->
+            <span></span>
+            <div id="second">
+                <h1></h1>
+                <div class="content-second"></div>
+            </div>
         </section>
     </section>
    </div>

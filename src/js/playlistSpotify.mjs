@@ -11,9 +11,8 @@ let songsList = [];
 
 export default class PlayListSpotify {
 
-  async HandlePayListHTML() {
+  async HandlePayListHTML(songs) {
     let HTML = "";
-    const songs = await sportfy.getTracks(playlist_id);
     songsList = songs;
     const first_song = songs.items[0].track;
 
@@ -32,9 +31,9 @@ export default class PlayListSpotify {
                       </span>
                   </div>
                   <p>${track.artists[0].name}</p>
-                  <p>${track.album.name}</p>
-                  <p>${utilits.convertMillisecondsToTime(track.duration_ms)}</p>
-                  <a href="${
+                  <p class="mobile-hidden">${track.album.name}</p>
+                  <p class="mobile-hidden">${utilits.convertMillisecondsToTime(track.duration_ms)}</p>
+                  <a class="mobile-hidden" href="${
                     track.external_urls.spotify
                   }" target="_blank">Open External</a>
           </div>
@@ -78,9 +77,11 @@ export default class PlayListSpotify {
     const playlistImageElement = document.querySelector(".playlist-image");
     playlistImageElement.setAttribute("src", images[0].url);
   }
+  
 
   async init() {
-    await this.HandlePayListHTML();
+    const songs = await sportfy.getTracks(playlist_id);
+    await this.HandlePayListHTML(songs);
 
     const song = songsList.items[0].track;
     songlass.handleSong(song.id, song.album.images[1].url, song.name, song.album.name, song.preview_url);
@@ -89,4 +90,6 @@ export default class PlayListSpotify {
     songlass.updateSongs(songsList);
     this.lastUpdated();
   }
+
+  
 }

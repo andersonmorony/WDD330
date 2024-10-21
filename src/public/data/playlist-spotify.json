@@ -3,30 +3,35 @@
         "Id": "37i9dQZEVXbLRQDuF5jeBp",
         "Title": "Top USA",
         "Image": "https://charts-images.scdn.co/assets/locale_en/regional/daily/region_us_default.jpg",
-        "Type": "spotify"
+        "Type": "playlist",
+        "album_type": "Playlist"
     },
     {
         "Id": "37i9dQZEVXbKj23U1GF4IR",
         "Title": "Top Canada",
         "Image": "https://charts-images.scdn.co/assets/locale_en/regional/daily/region_ca_default.jpg",
-        "Type": "spotify"
+        "Type": "playlist",
+        "album_type": "Playlist"
     },
     {
         "Id": "37i9dQZEVXbMXbN3EUUhlg",
         "Title": "Top Brazil",
         "Image": "https://charts-images.scdn.co/assets/locale_en/regional/daily/region_br_default.jpg",
-        "Type": "spotify"
+        "Type": "playlist",
+        "album_type": "Playlist"
     },
     {
         "Id": "37i9dQZEVXbJiZcmkrIHGU",
         "Title": "Top Germany",
         "Image": "https://charts-images.scdn.co/assets/locale_en/regional/daily/region_de_default.jpg",
-        "Type": "spotify"
+        "Type": "playlist",
+        "album_type": "Playlist"
     },
     {
         "Id": "37i9dQZEVXbMDoHDwVN2tF",
         "Title": "Top Worldwide",
         "Image": "https://charts-images.scdn.co/assets/locale_en/regional/daily/region_global_default.jpg",
-        "Type": "spotify"
+        "Type": "playlist",
+        "album_type": "Playlist"
     }
 ]

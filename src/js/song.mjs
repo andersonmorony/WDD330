@@ -12,7 +12,7 @@ export default class Song {
 
   handleSong(id, image, name, album, preview) {
     const HTML = `
-            <img src="${image}" alt="">
+            <img class="mobile-hidden" src="${image}" alt="">
             <div>
                 <p>${name}</p>
                 <p class="song-album">${album}</p>
@@ -52,7 +52,7 @@ export default class Song {
     const btnNext = document.querySelector("#next");
     btnNext.addEventListener("click", () => {
       const index = this.updateSongIndex(this.currentSongIndex + 1);
-      const song = this.songs.items[index].track;
+      const song = this.songs.items[index].track ? this.songs.items[index].track : this.songs.items[index];
       this.currentSong = song
       this.handleSong(song.id, song.album.images[1].url, song.name, song.album.name, song.preview_url);
       this.RemovePreviusMusicGif(this.songs.items[index - 1].track.id)

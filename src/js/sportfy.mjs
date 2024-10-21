@@ -56,6 +56,19 @@ export default class Spotify {
       }
     );
     const data = await response.json();
+    return data
+  }
+  async getAlbum(album_id) {
+    const endpoint = `https://api.spotify.com/v1/albums/${album_id}`
+    const response = await fetch(endpoint,
+      {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      }
+    );
+    const data = await response.json();
+    return data;
   }
 
   async GetPlayLists() {
@@ -65,10 +78,34 @@ export default class Spotify {
     utilits.HandlePayListHTML(data, "spotify");
   }
 
+  async GetPlayListsData() {
+    const response = await fetch("/data/playlist-spotify.json");
+    const data = await response.json();
+    return data;
+  }
+
   async GetPlayListInfomation(playlist_id) {
     try {
       const response = await fetch(
         `https://api.spotify.com/v1/playlists/${playlist_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.accessToken}`,
+          }
+        }
+      );
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  async Search(trackName, isTrack = true, isAlbum = false) {
+    try {
+      console.log(trackName)
+      const endpoint = `https://api.spotify.com/v1/search?q=${encodeURIComponent(trackName)}&type=track&limit=10`;
+      const response = await fetch(endpoint,
         {
           headers: {
             Authorization: `Bearer ${this.accessToken}`,
