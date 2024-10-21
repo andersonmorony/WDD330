@@ -77,6 +77,12 @@ export default class Spotify {
     utilits.HandlePayListHTML(data, "spotify");
   }
 
+  async GetPlayListsData() {
+    const response = await fetch("/data/playlist-spotify.json");
+    const data = await response.json();
+    return data;
+  }
+
   async GetPlayListInfomation(playlist_id) {
     try {
       const response = await fetch(

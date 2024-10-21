@@ -46,12 +46,12 @@ export default class AlbumSpotify {
       document.querySelectorAll(".song-title").forEach((element, index) => {
         element.addEventListener("click", () => {
           this.songlass.updateSongIndex(index);
-          const song = songs.items[index].track;
+          const song = this.songsList.items[index];
           this.songlass.handleSong(
             song.id,
-            song.album.images[1].url,
+            this.album.images[1].url,
             song.name,
-            song.album.name,
+            this.album.name,
             song.preview_url
           );
         });
