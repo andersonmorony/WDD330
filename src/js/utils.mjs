@@ -67,7 +67,10 @@ export default class utils {
 
     this.setStorage('favorite', JSON.stringify(songsStorage))
     element.target.disabled = true
-    element.target.innerHTML = "Adding..."
+    element.target.innerHTML = "Adding...";
+
+    this.setStorage("favorite-update", JSON.stringify(new Date()))
+
     callback()
   }
   

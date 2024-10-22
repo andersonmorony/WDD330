@@ -26,3 +26,8 @@ if(type == "deezer") {
     deezer.init()
 }
 
+if(!type) {
+    const spotify = new PlayListSpotify(true);
+    spotify.init()
+}
+
