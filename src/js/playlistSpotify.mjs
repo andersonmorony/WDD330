@@ -3,22 +3,25 @@ import utils from "./utils.mjs";
 import Song from "./song.mjs";
 
 const utilits = new utils("accessTokenSpotify");
-const access_token = utilits.getStorage("accessTokenSpotify");
-const sportfy = new Spotify(access_token.access_token);
-const playlist_id = utilits.getParams("id");
-const songlass = new Song(0);
-let songsList = [];
-
 export default class PlayListSpotify {
+  constructor() {
+    this.songsList = []
+    this.access_token = utilits.getStorage("accessTokenSpotify");
+    this.sportfy = new Spotify(this.access_token.access_token);
+    this.playlist_id = utilits.getParams("id");
+    this.songlass = new Song(0);
+  }
 
-  async HandlePayListHTML(songs) {
+  async HandlePayListHTML() {
     let HTML = "";
-    songsList = songs;
-    const first_song = songs.items[0].track;
+    const first_song = this.songsList.items[0].track;
+
+    // Get Favorites
+    const favoriteSongs = utilits.getStorage("favorite");
 
     utilits.setStorage("first_song", JSON.stringify(first_song));
 
-    songs.items.map((song, index) => {
+    this.songsList.items.map((song, index) => {
       const { track } = song;
       HTML += `
           <div id="playlist-data">
@@ -33,25 +36,40 @@ export default class PlayListSpotify {
                   <p>${track.artists[0].name}</p>
                   <p class="mobile-hidden">${track.album.name}</p>
                   <p class="mobile-hidden">${utilits.convertMillisecondsToTime(track.duration_ms)}</p>
-                  <a class="mobile-hidden" href="${
-                    track.external_urls.spotify
-                  }" target="_blank">Open External</a>
+                  
+                      ${
+                        favoriteSongs?.filter((fav) => fav.id === track.id)
+                          .length > 0
+                          ? `<button data-id="${track.id}" class="btn btn-favorite btn-remove">Remove</button>`
+                          : `<button data-id="${track.id}" class="btn btn-add btn-favorite">Add Favorite</button>`
+                      }
           </div>
           `;
       document.querySelector(".datalist").innerHTML = HTML;
 
-      document.querySelectorAll(".song-title").forEach((element, index) => {
-        element.addEventListener("click", () => {
-          songlass.updateSongIndex(index);
-          const song = songs.items[index].track;
-          songlass.handleSong(song.id, song.album.images[1].url, song.name, song.album.name, song.preview_url);
-        });
+    });
+
+    document.querySelectorAll(".song-title").forEach((element, index) => {
+      element.addEventListener("click", () => {
+        this.songlass.updateSongIndex(index);
+        const song = this.songsList.items[index].track;
+        this.songlass.handleSong(song.id, song.album.images[1].url, song.name, song.album.name, song.preview_url);
       });
     });
+
+    // Event list to Add favarite
+    document.querySelectorAll(".btn-add").forEach((element) => {
+      element.addEventListener("click", async (element) => {
+        utilits.AddFavorite(element, this.sportfy, this.HandlePayListHTML.bind(this));
+      });
+    });
+
+    // event list to remove favorite
+    utilits.removeFavorite(this.HandlePayListHTML.bind(this))
   }
 
   lastUpdated() {
-    const { items } = songsList;
+    const { items } = this.songsList;
     const lastUpdated = utilits.formateDate(items[0].added_at);
     const lastUpdatedElement = document.querySelector("#last-updated");
 
@@ -60,7 +78,7 @@ export default class PlayListSpotify {
 
   async getInfoCurrentPlayList() {
     const { description, images, name, external_urls, followers } =
-      await sportfy.GetPlayListInfomation(playlist_id);
+      await this.sportfy.GetPlayListInfomation(this.playlist_id);
 
     // change elements
     const playlistNameElement = document.querySelector(".playlist-name");
@@ -80,14 +98,14 @@ export default class PlayListSpotify {
   
 
   async init() {
-    const songs = await sportfy.getTracks(playlist_id);
-    await this.HandlePayListHTML(songs);
+    this.songsList  = await this.sportfy.getTracks(this.playlist_id);
+    await this.HandlePayListHTML();
 
-    const song = songsList.items[0].track;
-    songlass.handleSong(song.id, song.album.images[1].url, song.name, song.album.name, song.preview_url);
+    const song = this.songsList.items[0].track;
+    this.songlass.handleSong(song.id, song.album.images[1].url, song.name, song.album.name, song.preview_url);
 
     await this.getInfoCurrentPlayList();
-    songlass.updateSongs(songsList);
+    this.songlass.updateSongs(this.songsList);
     this.lastUpdated();
   }
 

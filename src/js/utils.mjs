@@ -56,4 +56,35 @@ export default class utils {
 
     lastUpdatedElement.innerHTML = lastUpdated;
   }
+
+  // Add music on favorite
+  // Add favorite songs
+  async AddFavorite(element, spotifyClass, callback) {
+    const id = element.target.dataset.id;
+    const song = await spotifyClass.getTrack(id)
+    const songsStorage = this.getStorage('favorite') || []
+    songsStorage.push(song)
+
+    this.setStorage('favorite', JSON.stringify(songsStorage))
+    element.target.disabled = true
+    element.target.innerHTML = "Adding..."
+    callback()
+  }
+  
+  // Remove favorite song
+  removeFavorite(callback) {
+    document.querySelectorAll(".btn-remove").forEach((element) => {
+      element.addEventListener('click', async () => {
+          const id = element.dataset.id;
+          const songsStorage = this.getStorage('favorite') || []
+          const result = songsStorage.filter((item) => 
+              item.id !== id
+          )
+          this.setStorage('favorite', JSON.stringify(result))
+          element.disabled = true
+          element.innerHTML = "Removing..."
+          callback()
+      })
+    })
+  }
 }

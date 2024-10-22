@@ -374,18 +374,21 @@ audio::-webkit-media-controls-play-button:hover {
   height: 95%;
   margin: auto 0;
 }
-#compare .btn-add {
+ .btn-favorite {
   border: none;
   background-color: transparent;
   color: var(--five);
   cursor: pointer;
   
 }
-#compare .btn-add:hover {
+ .btn-add:hover {
   color: var(--primary);
 }
-#compare .btn-add::after {
+ .btn-add::after {
   content: " ❤️";
+}
+#compare .btn-remove::after {
+  content: " 🗑️";
 }
 .loading {
   display: none;

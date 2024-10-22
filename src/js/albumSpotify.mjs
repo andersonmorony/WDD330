@@ -7,16 +7,19 @@ const utilits = new utils("accessTokenSpotify");
 export default class AlbumSpotify {
   constructor() {
     this.access_token = utilits.getStorage("accessTokenSpotify");
+    this.songsList = [];
+    this.album = {};
     this.sportfy = new Spotify(this.access_token.access_token);
     this.playlist_id = utilits.getParams("id");
     this.songlass = new Song(0);
-    this.songsList = [];
-    this.album = {};
   }
 
   async HandleHTML() {
     let HTML = "";
-    const first_song = this.songsList.items[0].track;
+    const first_song = this.songsList?.items[0].track;
+
+    // Get Favorites
+    const favoriteSongs = utilits.getStorage("favorite");
 
     utilits.setStorage("first_song", JSON.stringify(first_song));
 
@@ -36,32 +39,45 @@ export default class AlbumSpotify {
                       <p class="mobile-hidden">${utilits.convertMillisecondsToTime(
                         track.duration_ms
                       )}</p>
-                      <a class="mobile-hidden" href="${
-                        track.external_urls.spotify
-                      }" target="_blank">Open External</a>
+
+                      ${
+                        favoriteSongs?.filter((fav) => fav.id === track.id)
+                          .length > 0
+                          ? `<button data-id="${track.id}" class="btn btn-favorite btn-remove">Remove</button>`
+                          : `<button data-id="${track.id}" class="btn btn-add btn-favorite">Add Favorite</button>`
+                      }
               </div>
               `;
       document.querySelector(".datalist").innerHTML = HTML;
-
-      document.querySelectorAll(".song-title").forEach((element, index) => {
-        element.addEventListener("click", () => {
-          this.songlass.updateSongIndex(index);
-          const song = this.songsList.items[index];
-          this.songlass.handleSong(
-            song.id,
-            this.album.images[1].url,
-            song.name,
-            this.album.name,
-            song.preview_url
-          );
-        });
+    });
+    document.querySelectorAll(".song-title").forEach((element, index) => {
+      element.addEventListener("click", () => {
+        this.songlass.updateSongIndex(index);
+        const song = this.songsList.items[index];
+        this.songlass.handleSong(
+          song.id,
+          this.album.images[1].url,
+          song.name,
+          this.album.name,
+          song.preview_url
+        );
       });
     });
+
+
+    // Event list to Add favarite
+    document.querySelectorAll(".btn-add").forEach((element) => {
+      element.addEventListener("click", async (element) => {
+        utilits.AddFavorite(element, this.sportfy, this.HandleHTML.bind(this));
+      });
+    });
+
+    // event list to remove favorite
+    utilits.removeFavorite(this.HandleHTML.bind(this))
   }
- 
 
   async getInfoCurrentPlayList() {
-    console.log(this.album)
+    console.log(this.album);
     // change elements
     const playlistNameElement = document.querySelector(".playlist-name");
     playlistNameElement.innerHTML = this.album.name;
@@ -98,7 +114,6 @@ export default class AlbumSpotify {
 
     await this.getInfoCurrentPlayList();
 
-
     const songsTranform = {
       items: result.tracks.items.map((song) => {
         const current = {
@@ -120,5 +135,6 @@ export default class AlbumSpotify {
     };
     this.songlass.updateSongs(songsTranform);
     utilits.lastUpdated(this.album.release_date);
+
   }
 }

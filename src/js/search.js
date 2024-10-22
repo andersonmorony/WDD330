@@ -1,5 +1,10 @@
 import utils from "./utils.mjs";
 import Spotify from "./sportfy.mjs";
+import Header from "./Head.mjs";
+
+const header = new Header()
+header.BuilderHeaderHtml()
+
 const utilits = new utils()
 const sportfy = new Spotify()
 

@@ -2,6 +2,11 @@ import AlbumSpotify from "./albumSpotify.mjs";
 import PlayListDeezer from "./playlistDeezer.mjs";
 import PlayListSpotify from "./playlistSpotify.mjs";
 import utils from "./utils.mjs";
+import Header from "./Head.mjs";
+
+
+const header = new Header();
+header.BuilderHeaderHtml();
 
 const utilits = new utils();
 const type = utilits.getParams("type");
