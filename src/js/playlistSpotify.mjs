@@ -3,23 +3,31 @@ import utils from "./utils.mjs";
 import Song from "./song.mjs";
 
 const utilits = new utils("accessTokenSpotify");
-const access_token = utilits.getStorage("accessTokenSpotify");
-const sportfy = new Spotify(access_token.access_token);
-const playlist_id = utilits.getParams("id");
-const songlass = new Song(0);
-let songsList = [];
-
 export default class PlayListSpotify {
+  constructor(favorite = false) {
+    this.songsList = [];
+    this.access_token = utilits.getStorage("accessTokenSpotify");
+    this.sportfy = new Spotify(this.access_token.access_token);
+    this.playlist_id = utilits.getParams("id");
+    this.songlass = new Song(0);
+    this.favorite = favorite;
+  }
 
-  async HandlePayListHTML(songs) {
+  async HandlePayListHTML() {
     let HTML = "";
-    songsList = songs;
-    const first_song = songs.items[0].track;
+    const first_song = this.favorite
+      ? this.songsList
+      : this.songsList.items[0].track;
+
+    // Get Favorites
+    const favoriteSongs = utilits.getStorage("favorite");
 
     utilits.setStorage("first_song", JSON.stringify(first_song));
 
-    songs.items.map((song, index) => {
-      const { track } = song;
+    const songs = this.favorite ? this.songsList : this.songsList.items;
+
+    songs.map((song, index) => {
+      const track = this.favorite ? song : song.track;
       HTML += `
           <div id="playlist-data">
                   <div class="play">
@@ -32,26 +40,52 @@ export default class PlayListSpotify {
                   </div>
                   <p>${track.artists[0].name}</p>
                   <p class="mobile-hidden">${track.album.name}</p>
-                  <p class="mobile-hidden">${utilits.convertMillisecondsToTime(track.duration_ms)}</p>
-                  <a class="mobile-hidden" href="${
-                    track.external_urls.spotify
-                  }" target="_blank">Open External</a>
+                  <p class="mobile-hidden">${utilits.convertMillisecondsToTime(
+                    track.duration_ms
+                  )}</p>
+                  
+                      ${
+                        favoriteSongs?.filter((fav) => fav.id === track.id)
+                          .length > 0
+                          ? `<button data-id="${track.id}" class="btn btn-favorite btn-remove">Remove</button>`
+                          : `<button data-id="${track.id}" class="btn btn-add btn-favorite">Add Favorite</button>`
+                      }
           </div>
           `;
       document.querySelector(".datalist").innerHTML = HTML;
+    });
 
-      document.querySelectorAll(".song-title").forEach((element, index) => {
-        element.addEventListener("click", () => {
-          songlass.updateSongIndex(index);
-          const song = songs.items[index].track;
-          songlass.handleSong(song.id, song.album.images[1].url, song.name, song.album.name, song.preview_url);
-        });
+    document.querySelectorAll(".song-title").forEach((element, index) => {
+      element.addEventListener("click", () => {
+        this.songlass.updateSongIndex(index);
+        const song = this.favorite ? this.songsList[index] : this.songsList.items[index].track;
+        this.songlass.handleSong(
+          song.id,
+          song.album.images[1].url,
+          song.name,
+          song.album.name,
+          song.preview_url
+        );
       });
     });
+
+    // Event list to Add favarite
+    document.querySelectorAll(".btn-add").forEach((element) => {
+      element.addEventListener("click", async (element) => {
+        utilits.AddFavorite(
+          element,
+          this.sportfy,
+          this.init.bind(this)
+        );
+      });
+    });
+
+    // event list to remove favorite
+    utilits.removeFavorite(this.init.bind(this));
   }
 
   lastUpdated() {
-    const { items } = songsList;
+    const { items } = this.songsList;
     const lastUpdated = utilits.formateDate(items[0].added_at);
     const lastUpdatedElement = document.querySelector("#last-updated");
 
@@ -60,7 +94,7 @@ export default class PlayListSpotify {
 
   async getInfoCurrentPlayList() {
     const { description, images, name, external_urls, followers } =
-      await sportfy.GetPlayListInfomation(playlist_id);
+      await this.sportfy.GetPlayListInfomation(this.playlist_id);
 
     // change elements
     const playlistNameElement = document.querySelector(".playlist-name");
@@ -77,19 +111,74 @@ export default class PlayListSpotify {
     const playlistImageElement = document.querySelector(".playlist-image");
     playlistImageElement.setAttribute("src", images[0].url);
   }
-  
 
-  async init() {
-    const songs = await sportfy.getTracks(playlist_id);
-    await this.HandlePayListHTML(songs);
+  favoriteheader() {
+    // change elements
+    const playlistNameElement = document.querySelector(".playlist-name");
+    playlistNameElement.innerHTML = "Favorite Songs";
 
-    const song = songsList.items[0].track;
-    songlass.handleSong(song.id, song.album.images[1].url, song.name, song.album.name, song.preview_url);
+    const playlistDescrptElement = document.querySelector(
+      ".playlist-description"
+    );
+    playlistDescrptElement.innerHTML = "Those are your favorite songs";
 
-    await this.getInfoCurrentPlayList();
-    songlass.updateSongs(songsList);
-    this.lastUpdated();
+    const playlistFollowElement = document.querySelector(".playlist-follows");
+    playlistFollowElement.innerHTML = `${this.songsList.length} songs`;
+
+    const playlistImageElement = document.querySelector(".playlist-image");
+    playlistImageElement.setAttribute("src", "/image/favorite.jpg");
+
+    const lastDateUpdated = utilits.getStorage("favorite-update")
+    const lastUpdated = utilits.formateDate(lastDateUpdated);
+    const lastUpdatedElement = document.querySelector("#last-updated");
+
+    lastUpdatedElement.innerHTML = lastUpdated;
   }
 
-  
+  async init() {
+    this.songsList = this.favorite
+      ? utilits.getStorage("favorite")
+      : await this.sportfy.getTracks(this.playlist_id);
+    await this.HandlePayListHTML();
+
+    const song = this.favorite
+      ? this.songsList[0]
+      : this.songsList.items[0].track;
+    this.songlass.handleSong(
+      song.id,
+      song.album.images[1].url,
+      song.name,
+      song.album.name,
+      song.preview_url
+    );
+
+
+    if (this.favorite) {
+      const songsTranform = {
+        items: this.songsList.map((song) => {
+          const current = {
+            track: {
+              id: song.id,
+              track: {
+                id: song.id,
+              },
+              name: song.name,
+              album: {
+                name: song.album.name,
+                images: [{}, { url: song.album.images[1].url }],
+              },
+              preview_url: song.preview_url,
+            },
+          };
+          return current;
+        }),
+      };
+      this.songlass.updateSongs(songsTranform);
+      this.favoriteheader();
+    } else {
+      this.songlass.updateSongs(this.songsList);
+      await this.getInfoCurrentPlayList();
+      this.lastUpdated();
+    }
+  }
 }

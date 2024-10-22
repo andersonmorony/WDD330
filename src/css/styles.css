@@ -343,6 +343,20 @@ audio::-webkit-media-controls-play-button:hover {
   transition: transform 0.3s ease-in-out;
   cursor: pointer;
 }
+.btn-compare {
+  background-color: var(--primary);
+  color: var(--four);
+  border: 0;
+  padding: 10px 10px;
+  cursor: pointer;
+  width: 200px;
+}
+.btn-compare:disabled {
+  background-color: var(--background);
+  border: 1px solid #cfc9c9;
+  color: #cfc9c9;
+  cursor: not-allowed;
+}
 #btn-clear {
   display: none;
   background-color: var(--primary);
@@ -374,18 +388,27 @@ audio::-webkit-media-controls-play-button:hover {
   height: 95%;
   margin: auto 0;
 }
-#compare .btn-add {
+ .btn-favorite {
   border: none;
   background-color: transparent;
   color: var(--five);
   cursor: pointer;
-  
 }
-#compare .btn-add:hover {
+.btn-favorite:disabled {
+  color: #3e3e3ea4;
+  cursor: not-allowed;
+}
+.btn-favorite:disabled::after {
+  content: "";
+}
+ .btn-add:hover {
   color: var(--primary);
 }
-#compare .btn-add::after {
+ .btn-add::after {
   content: " ❤️";
+}
+ .btn-remove::after {
+  content: " 🗑️";
 }
 .loading {
   display: none;

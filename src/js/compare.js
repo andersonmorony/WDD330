@@ -1,5 +1,9 @@
 import Spotify from "./sportfy.mjs";
 import utils from "./utils.mjs";
+import Header from "./Head.mjs";
+
+const header = new Header();
+header.BuilderHeaderHtml()
 
 const utilits = new utils();
 const sportfy = new Spotify();
@@ -33,12 +37,12 @@ function buildPlaylistHtml(list) {
     element.addEventListener("click", () => {
       element.disabled = true;
       const playlist_id = element.dataset.id;
-      selectPplaylist(playlist_id);
+      selectPlayList(playlist_id);
     });
   });
 }
 
-async function selectPplaylist(playlist_id) {
+async function selectPlayList(playlist_id) {
   if (playlistSelected.length == 2) {
     return false;
   }
@@ -48,9 +52,7 @@ async function selectPplaylist(playlist_id) {
   });
 
   if (playlistSelected.length == 2) {
-    const btn = document.querySelector("#btn-start-compare");
-    btn.classList.add("show");
-    btn.addEventListener("click", compare);
+    compare()
   }
   UpdateState();
 }
@@ -60,8 +62,6 @@ async function compare() {
   const cards = document.querySelector(`#spotify`);
   cards.classList.add("hidden");
   cards.classList.remove("show");
-  document.querySelector("#btn-start-compare").classList.add("hidden");
-  document.querySelector("#btn-start-compare").classList.remove("show");
   document.querySelector("#btn-clear").classList.add("show");
   document.querySelector("#btn-clear").classList.remove("hidden");
   document.querySelector("#compare").classList.remove("hidden");
@@ -76,34 +76,27 @@ async function compare() {
   document.querySelector(".loading").classList.add("show")
   document.querySelector(".loading").classList.remove("hidden")
 
-  loadFirst_musics(".content-first", first_playlist);
-  loadFirst_musics(".content-second", second_playlist);
+  buildCompareHtml(".content-first", first_playlist);
+  buildCompareHtml(".content-second", second_playlist);
 
   document.querySelector(".loading").classList.add("hidden")
   document.querySelector(".loading").classList.remove("show")
 
-  document.querySelectorAll(".btn-favorite").forEach((element) => {
-    element.addEventListener('click', async () => {
-        const id = element.dataset.id;
-        const song = await sportfy.getTrack(id)
-        console.log(song)
-        const songsStorage = utilits.getStorage('favorite') || []
-        songsStorage.push(song)
-
-        utilits.setStorage('favorite', JSON.stringify(songsStorage))
-        element.disabled = true
-        element.innerHTML = "Added"
-        element.classList.add("btn-favorite-remove");
-        element.classList.remove("btn-favorite");
-        removeFavorite()
+  document.querySelectorAll(".btn-add").forEach((element) => {
+    element.addEventListener('click', async (element) => {
+      utilits.AddFavorite(element, sportfy, compare)
     })
-  })
-
+  });
+  utilits.removeFavorite(compare)
 
 }
 
-function loadFirst_musics(elementParent, songs) {
+function buildCompareHtml(elementParent, songs) {
   let HTML = `<h1 class="compare-title">${songs.name}</h1>`;
+
+  // Get Favorites
+  const favoriteSongs = utilits.getStorage("favorite");
+
   songs.tracks.items.map((song, index) => {
     const { track } = song;
     HTML += `
@@ -117,7 +110,10 @@ function loadFirst_musics(elementParent, songs) {
                   <p class="mobile-hidden">${utilits.convertMillisecondsToTime(
                     track.duration_ms
                   )}</p>
-                  <button data-id="${track.id}" class="btn btn-add btn-favorite">Add Favorite</button>
+                  ${
+                    favoriteSongs?.filter((fav) => fav.id === track.id).length > 0 ? `<button data-id="${track.id}" class="btn btn-favorite btn-remove">Remove</button>` :`<button data-id="${track.id}" class="btn btn-add btn-favorite">Add Favorite</button>` 
+                  }
+                  
           </div>
           `;
     document.querySelector(elementParent).innerHTML = HTML;
@@ -127,8 +123,6 @@ function loadFirst_musics(elementParent, songs) {
 function UpdateState() {
   const countElement = document.querySelector("#count-selected");
   countElement.innerHTML = playlistSelected.length;
-
-  console.log("chamou");
 
   if (playlistSelected == 0) {
     const cards = document.querySelector(`#spotify`);
@@ -145,25 +139,6 @@ function UpdateState() {
     document.querySelector("#btn-clear").classList.add("hidden");
     document.querySelector("#btn-clear").classList.remove("show");
   }
-}
-
-function removeFavorite() {
-
-  document.querySelectorAll(".btn-favorite-remove").forEach((element) => {
-    element.addEventListener('click', async () => {
-        const id = element.dataset.id;
-        const songsStorage = utilits.getStorage('favorite') || []
-        songsStorage.filter((item) => {
-            item.id !== id
-        })
-
-        utilits.setStorage('favorite', JSON.stringify(songsStorage))
-        element.disabled = true
-        element.innerHTML = "Add Favorite"
-        element.classList.add("btn-favorite");
-        element.classList.remove("btn-favorite-remove");
-    })
-  })
 }
 
 init();
