@@ -137,20 +137,31 @@ export default class PlayListSpotify {
 
   async init() {
     this.songsList = this.favorite
-      ? utilits.getStorage("favorite")
+      ? utilits.getStorage("favorite") || []
       : await this.sportfy.getTracks(this.playlist_id);
     await this.HandlePayListHTML();
 
     const song = this.favorite
       ? this.songsList[0]
       : this.songsList.items[0].track;
-    this.songlass.handleSong(
-      song.id,
-      song.album.images[1].url,
-      song.name,
-      song.album.name,
-      song.preview_url
-    );
+
+    if(song)
+    {
+      this.songlass.handleSong(
+        song.id,
+        song.album.images[1].url,
+        song.name,
+        song.album.name,
+        song.preview_url
+      );
+    } else {
+      document.querySelector("#playmusic").classList.add("hidden")
+      document.querySelector("#section-playlist").innerHTML = `
+        <div class="alert">
+          <h1>You don't have favorite song yet.</h1>
+        </div>
+      `
+    }
 
 
     if (this.favorite) {
