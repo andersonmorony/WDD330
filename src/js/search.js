@@ -15,6 +15,9 @@ async function init() {
     await sportfy.getAccessToken()
 
     try {
+        gtag("event", "search", {
+            search_term: elementValue
+        });
        const result = await sportfy.Search(elementValue);
 
        if(!result) { return false}

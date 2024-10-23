@@ -20,7 +20,7 @@ export default class utils {
                   <img src="${playlist.Image}" alt="">
                   <h4>${playlist.Title}</h4>
                   <p>${playlist.album_type}</p>
-                  <a href="/playlist/index.html?id=${playlist.Id}&type=${playlist.Type}">See musics</a>
+                  <a class="ga-card" data-id="${playlist.Id}" data-title="${playlist.Title}" href="/playlist/index.html?id=${playlist.Id}&type=${playlist.Type}">See musics</a>
                 </div>
             `;
     });
@@ -45,9 +45,14 @@ export default class utils {
   }
 
   formateDate(date) {
-    const newDate = new Date(date)
-    const dateFormated = newDate.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    return dateFormated
+    const newDate = new Date(date);
+    const dateFormated = newDate.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    return dateFormated;
   }
 
   lastUpdated(date) {
@@ -61,33 +66,45 @@ export default class utils {
   // Add favorite songs
   async AddFavorite(element, spotifyClass, callback) {
     const id = element.target.dataset.id;
-    const song = await spotifyClass.getTrack(id)
-    const songsStorage = this.getStorage('favorite') || []
-    songsStorage.push(song)
+    const song = await spotifyClass.getTrack(id);
+    const songsStorage = this.getStorage("favorite") || [];
+    songsStorage.push(song);
 
-    this.setStorage('favorite', JSON.stringify(songsStorage))
-    element.target.disabled = true
+    this.setStorage("favorite", JSON.stringify(songsStorage));
+    element.target.disabled = true;
     element.target.innerHTML = "Adding...";
 
-    this.setStorage("favorite-update", JSON.stringify(new Date()))
+    this.setStorage("favorite-update", JSON.stringify(new Date()));
+    
+    gtag("event", "favorite_song_added", {
+      'id': id,
+      'name': song.name,
+      'album': song.album.name,
+      'artists': song.artists[0].name,
+      'date': new Date(),
+    });
 
-    callback()
+    callback();
   }
-  
+
   // Remove favorite song
   removeFavorite(callback) {
     document.querySelectorAll(".btn-remove").forEach((element) => {
-      element.addEventListener('click', async () => {
-          const id = element.dataset.id;
-          const songsStorage = this.getStorage('favorite') || []
-          const result = songsStorage.filter((item) => 
-              item.id !== id
-          )
-          this.setStorage('favorite', JSON.stringify(result))
-          element.disabled = true
-          element.innerHTML = "Removing..."
-          callback()
-      })
-    })
+      element.addEventListener("click", async () => {
+        const id = element.dataset.id;
+        const songsStorage = this.getStorage("favorite") || [];
+        const result = songsStorage.filter((item) => item.id !== id);
+        this.setStorage("favorite", JSON.stringify(result));
+        element.disabled = true;
+        element.innerHTML = "Removing...";
+
+        gtag("event", "favorite_song_remove", {
+          'id': id,
+          'date': new Date(),
+        });
+
+        callback();
+      });
+    });
   }
 }
