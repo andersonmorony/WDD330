@@ -37,6 +37,16 @@ export default class Song {
     this.NextSong();
     this.previusSong();
     this.addMusicGif(id)
+
+    gtag("event", "song_listing", {
+      'id': id,
+      'name': name,
+      'album': album,
+      'image': image,
+      'preview': preview,
+      'date': new Date(),
+      'current_page': window.location.pathname,
+    });
   }
 
   updateSongIndex(index) {
