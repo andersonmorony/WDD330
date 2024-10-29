@@ -3,10 +3,14 @@ import PlayListDeezer from "./playlistDeezer.mjs";
 import PlayListSpotify from "./playlistSpotify.mjs";
 import utils from "./utils.mjs";
 import Header from "./Head.mjs";
+import Footer from "./Footer.mjs";
 
 
 const header = new Header();
 header.BuilderHeaderHtml();
+
+const footer = new Footer();
+footer.BuilderFooterHtml()
 
 const utilits = new utils();
 const type = utilits.getParams("type");

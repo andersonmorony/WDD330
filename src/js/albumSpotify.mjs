@@ -16,7 +16,7 @@ export default class AlbumSpotify {
 
   async HandleHTML() {
     let HTML = "";
-    const first_song = this.songsList?.items[0].track;
+    const first_song = this.songsList?.items[0];
 
     // Get Favorites
     const favoriteSongs = utilits.getStorage("favorite");
@@ -77,7 +77,6 @@ export default class AlbumSpotify {
   }
 
   async getInfoCurrentPlayList() {
-    console.log(this.album);
     // change elements
     const playlistNameElement = document.querySelector(".playlist-name");
     playlistNameElement.innerHTML = this.album.name;

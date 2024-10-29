@@ -1,6 +1,7 @@
 import Spotify from "./sportfy.mjs";
 import utils from "./utils.mjs";
 import Header from "./Head.mjs";
+import Footer from "./Footer.mjs";
 
 
 const init = async () => {
@@ -8,6 +9,10 @@ const init = async () => {
     const utilits = new utils();
     const sportfy = new Spotify();
     header.BuilderHeaderHtml();
+
+  const footer = new Footer()
+  footer.BuilderFooterHtml()
+
     await sportfy.getAccessToken();
     await sportfy.GetPlayLists();
 
