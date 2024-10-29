@@ -80,21 +80,38 @@ export default class Song {
   }
 
   addMusicGif(id) {
-    clearInterval(this.interval)
+    clearInterval(this.interval); // Limpa qualquer intervalo anterior
     this.interval = setInterval(() => {
       const audioElement = document.getElementById('audioSong');
-      if (audioElement.duration > 0 && !audioElement.paused) {
-          const element = document.getElementById(id);
+      const element = document.getElementById(id);
+  
+      if (audioElement && element) {
+        if (audioElement.duration > 0 && !audioElement.paused) {
+          this.removeAllMusicGifs();
           element.innerHTML = `<img src="/image/wave.gif" alt="playing">`;
-      } else {
-        this.RemovePreviusMusicGif(id);
-      }
-    }, 500)
+        } else {
+          this.removePreviousMusicGif(id);
+        }
+      } 
+    }, 500);
+  }
+  
+  removePreviousMusicGif(id) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.innerHTML = ""; 
+    } 
   }
 
-  RemovePreviusMusicGif(id) {
-    const element = document.getElementById(id);
-    element.innerHTML = ""
-  }
+removeAllMusicGifs() {
+  const elementsWithGif = document.querySelectorAll('div img[src="/image/wave.gif"]');
+  elementsWithGif.forEach(img => {
+    const parent = img.parentNode;
+    if (parent) {
+      parent.innerHTML = ""; 
+    }
+  });
+}
+
 }
 
