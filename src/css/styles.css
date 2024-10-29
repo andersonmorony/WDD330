@@ -419,3 +419,10 @@ audio::-webkit-media-controls-play-button:hover {
   background: var(--primary);
   color: var(--four);
 }
+
+#footer {
+  background-color: var(--primary);
+  color: var(--four);
+  text-align: center;
+  padding: 20px 0;
+}
